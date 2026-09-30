@@ -2,16 +2,16 @@ class FriendlyNoDropHandler : StaticEventHandler
 {
     override void WorldThingDied(WorldEvent e)
     {
-        // Se a morire è un mostro alleato
+        // If the thing that died is a friendly monster
         if (e.Thing && e.Thing.bISMONSTER && e.Thing.bFriendly)
         {
             console.printf(e.Thing.GetClassName());
-			// Avvia il countdown di 30 secondi sul cadavere
+			// Start the 30-second countdown on the corpse
             FriendlyCorpseTimer.Create(e.Thing, 30);
         }
     }
 
-    // Qui mantieni il controllo per evitare che droppi le armi
+    // Control is kept here to stop it from dropping weapons
     override void WorldThingSpawned(WorldEvent e)
     {
         let item = Inventory(e.Thing);

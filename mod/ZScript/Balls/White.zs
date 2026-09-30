@@ -7,11 +7,11 @@ class WhiteBFGBall : ColorlessBFGBall
     }
 
     // =========================================================================
-    // Funzione dedicata: Resurrezione / Sostituzione Archvile
-    // Può essere chiamata OVUNQUE (in questo proiettile o in altri contesti).
-    // Parametri:
-    // - corpse: Il puntatore al cadavere dell'Archvile
-    // - instigator: Chi ha sparato / il giocatore (diventerà il master)
+    // Dedicated function: Archvile resurrection / replacement
+    // Can be called from ANYWHERE (in this projectile or in other contexts).
+    // Parameters:
+    // - corpse: Pointer to the Archvile's corpse
+    // - instigator: Whoever fired / the player (will become the master)
     // =========================================================================
     virtual Actor ReviveNonRaisableEnemyAsFriendly(Actor corpse, Actor instigator)
     {
@@ -21,39 +21,39 @@ class WhiteBFGBall : ColorlessBFGBall
         class<Actor> nonRaisableClass = corpse.GetClass();
         double defHeight = GetDefaultByType(nonRaisableClass).Height;
 
-        // 1. Controllo verticale: verifica che il soffitto non schiacci il nuovo mostro
+        // 1. Vertical check: make sure the ceiling does not crush the new monster
         if (corpse.CeilingZ - corpse.FloorZ < defHeight)
         {
-            return null; // Spazio insufficiente per rialzarsi in piedi
+            return null; // Not enough room to stand back up
         }
 
-        // 2. Rimuove il vecchio cadavere dal mondo di gioco
+        // 2. Remove the old corpse from the game world
         corpse.Destroy();
 
-        // 3. Spawna una nuova istanza pulita
+        // 3. Spawn a clean new instance
         Actor newArch = Spawn(nonRaisableClass, spawnPos, ALLOW_REPLACE);
         if (newArch)
         {
-            // Imposta lo stato di alleanza
+            // Set the friendly (allied) state
             newArch.bFriendly = true;
 
-            // Se chi lo ha resuscitato esiste, lo imposta come padrone e sveglia l'IA
+            // If the reviver exists, set it as master and wake up the AI
             if (instigator)
             {
                 newArch.master = instigator;
                 newArch.LastHeard = instigator;
-                // Imposta l'angolo verso la stessa direzione del giocatore o dell'impatto
+                // Set the angle to the same direction as the player or the impact
                 newArch.Angle = instigator.Angle;
             }
 
-            // 4. Riproduce lo stato "See" per farlo partire subito attivo
+            // 4. Play the "See" state so it starts active immediately
             State seeState = newArch.FindState("See");
             if (seeState)
             {
                 newArch.SetState(seeState);
             }
 
-            // 5. Effetto grafico visivo centrato sul busto
+            // 5. Visual effect centered on the torso
             Vector3 effectPos = (newArch.Pos.X, newArch.Pos.Y, newArch.Pos.Z + (defHeight * 0.5));
             Spawn("WhiteArchvileFire", effectPos, ALLOW_REPLACE);
         }
@@ -66,11 +66,11 @@ class WhiteBFGBall : ColorlessBFGBall
     Death:
         BFE1 A 0
         {
-            // Controllo inventario UNA SOLA VOLTA a monte del ciclo (se l'oggetto è passivo)
-            // Esempio: bool hasItem = (target && target.FindInventory("Talismano") != null);
+            // Inventory check ONLY ONCE before the loop (if the item is passive)
+            // Example: bool hasItem = (target && target.FindInventory("Talisman") != null);
 
             // =============================================================
-            // MODIFY THIS VALUE: numero massimo di nemici resuscitati per palla
+            // MODIFY THIS VALUE: maximum number of enemies revived per ball
             // =============================================================
             int maxRevives = 1;
             int revivedCount = 0;
@@ -79,25 +79,25 @@ class WhiteBFGBall : ColorlessBFGBall
             
             while (it.Next())
             {
-                // Interrompe la scansione quando il limite di resurrezioni è raggiunto
+                // Stop scanning once the revival limit has been reached
                 if (revivedCount >= maxRevives) break;
 
                 Actor mo = it.thing;
                 
-                // Controlli di sicurezza: valido, cadavere, altezza > 0 (non schiacciato), raggio euclideo
+                // Safety checks: valid, corpse, height > 0 (not crushed), euclidean radius
                 if (!mo || !mo.bCORPSE || mo.Height <= 0 || Distance3D(mo) > 256)
                 {
                     continue;
                 }
 
                 // =============================================================
-                // CASO SPECIALE: Archvile
-                // La funzione è separata: puoi racchiuderla in una tua condizione,
-                // controlli di inventario o disattivarla a piacimento.
+                // SPECIAL CASE: Archvile
+                // The function is standalone: you may wrap it in your own condition,
+                // add inventory checks, or disable it at will.
                 // =============================================================
                 if (!mo.FindState("Raise"))
                 {
-                    // Chiamata alla funzione autonoma
+                    // Call the standalone function
                     if (ReviveNonRaisableEnemyAsFriendly(mo, target))
                     {
                         revivedCount++;
@@ -106,7 +106,7 @@ class WhiteBFGBall : ColorlessBFGBall
                 }
 
                 // =============================================================
-                // CASO NORMALE: Mostri comuni (con stato "Raise")
+                // NORMAL CASE: common monsters (they have a "Raise" state)
                 // =============================================================
                 State raiseState = mo.FindState("Raise");
                 if (!raiseState)

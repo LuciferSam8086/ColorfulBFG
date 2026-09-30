@@ -1,21 +1,21 @@
 // =========================================================================
-// BASE CLASS: PALLA BFG INCOLORE
+// BASE CLASS: COLORLESS BFG BALL
 // =========================================================================
-// Questa classe base serve come genitore comune per tutte le palle BFG
-// personalizzate. La sua unica responsabilita' e' quella di IGNORARE
-// SEMPRE l'autoaim, indipendentemente dalle impostazioni del giocatore.
+// This base class is the common parent of every custom BFG ball.
+// Its only responsibility is to ALWAYS ignore autoaim, regardless of the
+// player's settings.
 //
-// PERCHE' E' NECESSARIO:
-// L'engine applica l'autoaim in fase di sparo dentro P_SpawnPlayerMissile
-// (vedi uzdoom_source/src/playsim/p_mobj.cpp): esso calcola un pitch/yaw
-// "aggiustato" verso il nemico piu' vicino e poi imposta:
+// WHY IT IS NEEDED:
+// The engine applies autoaim at fire time inside P_SpawnPlayerMissile
+// (see uzdoom_source/src/playsim/p_mobj.cpp): it computes an "adjusted"
+// pitch/yaw toward the nearest enemy and then sets:
 //     MissileActor->Angles.Yaw = an;
 //     MissileActor->Vel3DFromAngle(pitch, MissileActor->Speed);
 //
-// Gli angoli REALI del giocatore (target.Angles.Yaw / Angles.Pitch) non
-// vengono MAI modificati dall'autoaim. Quindi, in PostBeginPlay, possiamo
-// leggere l'orientamento reale dello sparatore e ricalcolare la velocita',
-// annullando di fatto l'autoaim.
+// The player's REAL angles (target.Angles.Yaw / Angles.Pitch) are NEVER
+// modified by autoaim. Therefore, in PostBeginPlay we can read the shooter's
+// real orientation and recalculate the velocity, which effectively undoes
+// any autoaim correction.
 // =========================================================================
 class ColorlessBFGBall : BFGBall
 {
@@ -23,8 +23,8 @@ class ColorlessBFGBall : BFGBall
     {
         Super.PostBeginPlay();
 
-        // Se lo sparatore e' un giocatore, ripristina l'orientamento reale
-        // della visuale, scartando qualsiasi correzione di autoaim.
+        // If the shooter is a player, restore the real view orientation,
+        // discarding any autoaim correction.
         if (target && target.player)
         {
             Angle = target.Angle;

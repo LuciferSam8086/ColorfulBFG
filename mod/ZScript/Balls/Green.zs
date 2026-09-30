@@ -1,6 +1,6 @@
 class GreenBFGBall : ColorlessBFGBall
 {
-    // Inietti tutti i metodi del mixin qui dentro
+    // Inject all of the mixin's methods right here
     mixin BFGUtilityMethods;
 
     Default
@@ -30,7 +30,7 @@ class GreenBFGBall : ColorlessBFGBall
         BFE1 A 8 Bright;
         BFE1 B 8 Bright 
         {
-            // Ora puoi chiamarla nativamente perché è stata iniettata!
+            // Now it can be called natively because it has been injected!
             A_SafeBFGSpray("BFGExtra", 40, 15);
         }
         BFE1 CDEF 8 Bright;

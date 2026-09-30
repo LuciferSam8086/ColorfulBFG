@@ -1,5 +1,5 @@
 // =========================================================================
-// TOKEN DI INVENTARIO INVISIBILE: funge da contatore sul giocatore
+// INVISIBLE INVENTORY TOKEN: acts as a counter on the player
 // =========================================================================
 class YellowBallInvulToken : Inventory
 {
@@ -12,7 +12,7 @@ class YellowBallInvulToken : Inventory
 }
 
 // =========================================================================
-// PALLA GIALLA BFG
+// YELLOW BFG BALL
 // =========================================================================
 class YellowBFGBall : ColorlessBFGBall
 {
@@ -24,7 +24,7 @@ class YellowBFGBall : ColorlessBFGBall
 
     Default
     {
-        // [DEBUG VELOCITÀ]: Modifica questo valore per regolare la velocità
+        // [DEBUG SPEED]: change this value to tune the projectile speed
         YellowBFGBall.BallSpeed 6.0; 
 
         +SHOOTABLE
@@ -44,7 +44,7 @@ class YellowBFGBall : ColorlessBFGBall
     {
         Super.PostBeginPlay();
 
-        // 1. Applica velocità scalando il vettore reale
+        // 1. Apply the speed by scaling the real velocity vector
         if (ballSpeed > 0)
         {
             Speed = ballSpeed;
@@ -54,7 +54,7 @@ class YellowBFGBall : ColorlessBFGBall
             }
         }
 
-        // 2. Registra il giocatore
+        // 2. Store the player reference
         if (target && target.player)
         {
             realPlayer = PlayerPawn(target);
@@ -64,10 +64,10 @@ class YellowBFGBall : ColorlessBFGBall
         {
             bInvulGranted = true;
 
-            // Dà un token al player (o ne aumenta l'Amount se ne ha già)
+            // Grant a token to the player (or increase its Amount if already present)
             realPlayer.GiveInventoryType("YellowBallInvulToken");
 
-            // Applica invulnerabilità e stencil
+            // Apply invulnerability and the stencil render style
             realPlayer.bInvulnerable = true;
             realPlayer.A_SetRenderStyle(1.0, STYLE_Stencil);
             realPlayer.SetShade("Gold");
@@ -82,13 +82,13 @@ class YellowBFGBall : ColorlessBFGBall
 
             if (realPlayer)
             {
-                // Rimuove un token dall'inventario del giocatore
+                // Remove one token from the player's inventory
                 realPlayer.TakeInventory("YellowBallInvulToken", 1);
 
-                // Controlla se al giocatore sono rimasti altri token (altre palle in volo)
+                // Check whether the player still has other tokens (other balls in flight)
                 let token = realPlayer.FindInventory("YellowBallInvulToken");
 
-                // Se non ci sono più token (o amount <= 0), resetta il player!
+                // If no tokens are left (or Amount <= 0), reset the player!
                 if (!token || token.Amount <= 0)
                 {
                     realPlayer.bInvulnerable = false;

@@ -78,7 +78,7 @@ class FriendlyCorpseTimer : Thinker
     {
         let timer = new("FriendlyCorpseTimer");
         timer.corpse = targetCorpse;
-        timer.lifetime = durationInSeconds * 35; // 35 tic al secondo
+        timer.lifetime = durationInSeconds * 35; // 35 tics per second
         return timer;
     }
 
@@ -86,21 +86,21 @@ class FriendlyCorpseTimer : Thinker
     {
         Super.Tick();
 
-        // Se il cadavere è stato distrutto da altri eventi nel frattempo
+        // In case the corpse was destroyed by other events in the meantime
         if (!corpse)
         {
             Destroy();
             return;
         }
 
-        // Se nel frattempo il cadavere è stato resuscitato (non è più un cadavere!)
+        // In case the corpse was revived in the meantime (it is no longer a corpse!)
         if (!corpse.bCORPSE)
         {
             Destroy();
             return;
         }
 
-        // Decrementa il timer
+        // Decrement the timer
         lifetime--;
 		if(lifetime%35==0)
 		{
@@ -108,15 +108,15 @@ class FriendlyCorpseTimer : Thinker
 		}
 		
 
-        // Quando scadono i 30 secondi (ultimi 35 tic = 1 secondo finale)
+        // When the 30 seconds run out (last 35 tics = final second)
         if (lifetime <= 35)
         {
-            // Dissolvenza graduale nell'ultimo secondo
+            // Gradual fade-out during the last second
             corpse.A_FadeOut(0.03);
 
             if (lifetime <= 0)
             {
-                // Se non è ancora sparito del tutto, rimozione forzata
+                // If it has not fully disappeared yet, force its removal
                 if (corpse)
                 {
                     corpse.Destroy();
