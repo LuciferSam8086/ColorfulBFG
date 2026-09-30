@@ -1,4 +1,4 @@
-class WhiteBFGBall : BFGBall
+class WhiteBFGBall : ColorlessBFGBall
 {
     Default
     {

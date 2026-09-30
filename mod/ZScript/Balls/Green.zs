@@ -1,4 +1,4 @@
-class GreenBFGBall : BFGBall
+class GreenBFGBall : ColorlessBFGBall
 {
     // Inietti tutti i metodi del mixin qui dentro
     mixin BFGUtilityMethods;

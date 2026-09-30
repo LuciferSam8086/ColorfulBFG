@@ -14,7 +14,7 @@ class YellowBallInvulToken : Inventory
 // =========================================================================
 // PALLA GIALLA BFG
 // =========================================================================
-class YellowBFGBall : BFGBall
+class YellowBFGBall : ColorlessBFGBall
 {
     private bool bInvulGranted;
     private PlayerPawn realPlayer;
