@@ -1,6 +1,6 @@
 mixin class BFGUtilityMethods
 {
-    void A_SafeBFGSpray(class<Actor> spraytype = "BFGExtra", int numrays = 40, int damagecnt = 15, double ang = 90, double distance = 16 * 64, double vrange = 32, int defdamage = 0, int flags = 0)
+    void A_SafeBFGSpray(class<Actor> spraytype = "BFGExtra", int numrays = 40, int damagecnt = 15, double ang = 90, double distance = 16 * 64, double vrange = 32, int defdamage = 0, int flags = 0, string damType = "BFGSplash")
     {
         int damage;
         FTranslatedLineTarget t;
@@ -34,7 +34,7 @@ mixin class BFGUtilityMethods
 
                 Actor spray = Spawn(spraytype, t.linetarget.Pos + (0, 0, t.linetarget.Height / 4.0), ALLOW_REPLACE);
                 int dmgFlags = 0;
-                Name dmgType = 'BFGSplash';
+                Name dmgType = damType;
 
                 if (spray != null)
                 {

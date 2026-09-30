@@ -8,6 +8,7 @@ class YellowBallInvulToken : Inventory
         Inventory.MaxAmount 999;
         +INVENTORY.UNDROPPABLE
         +INVENTORY.UNTOSSABLE
+		Translation "112:127=160:167";
     }
 }
 
@@ -72,6 +73,11 @@ class YellowBFGBall : ColorlessBFGBall
             realPlayer.A_SetRenderStyle(1.0, STYLE_Stencil);
             realPlayer.SetShade("Gold");
         }
+
+        // Attach the yellow glow BEFORE the first render to avoid a 1-tic delay.
+        // Offset (0,0,16) is the ball's center (Height 32 / 2).
+        A_AttachLight('yellowBallGlow', DynamicLight.PointLight, 0xFFFF00, 96, 0,
+            DynamicLight.LF_ATTENUATE, (0, 0, 16));
     }
 
     void RemoveInvulnerability()
@@ -160,6 +166,12 @@ class YellowBFGBall : ColorlessBFGBall
             bShootable = false;
             bSolid = false;
             RemoveInvulnerability();
+
+            // Kill the attached light the instant the ball dies, so it does not
+            // linger on the frozen post-death actor (Stop -> tics == -1). A shootable
+            // missile killed by a monster also takes this path:
+            // Die() -> P_ExplodeMissile() -> Death state.
+            A_RemoveLight('yellowBallGlow');
         }
         BFE1 ABCDEF 8 Bright;
         Stop;
