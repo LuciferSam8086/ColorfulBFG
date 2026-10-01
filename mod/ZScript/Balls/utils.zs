@@ -102,11 +102,6 @@ class FriendlyCorpseTimer : Thinker
 
         // Decrement the timer
         lifetime--;
-		if(lifetime%35==0)
-		{
-			console.printf("attore %s sta per scomparire tra %i secondi", corpse.GetClassName(),lifetime/35);
-		}
-		
 
         // When the 30 seconds run out (last 35 tics = final second)
         if (lifetime <= 35)
