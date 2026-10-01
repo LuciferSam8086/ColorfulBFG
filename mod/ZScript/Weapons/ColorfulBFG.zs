@@ -1,10 +1,13 @@
 class ColorfulBFG : DoomWeapon replaces BFG9000
 {
+	// 0 = uninitialized, 1 = green, 2 = white, 3 = yellow
+	int selectedBallType;
+
 	Default
 	{
 		Height 20;
 		Weapon.SelectionOrder 2800;
-		Weapon.AmmoUse 40;
+		Weapon.AmmoUse 0; // real cost is chosen per ball type
 		Weapon.AmmoGive 0;
 		Weapon.AmmoType "Cell";
 		+WEAPON.NOAUTOFIRE;
@@ -13,6 +16,7 @@ class ColorfulBFG : DoomWeapon replaces BFG9000
 		Tag "Colorful BFG";
 		Weapon.SlotNumber 7;
 	}
+
 	States
 	{
 	Ready:
@@ -26,7 +30,6 @@ class ColorfulBFG : DoomWeapon replaces BFG9000
 		Loop;
 	Fire:
 		BFGG A 20 A_BFGsound;
-		BFGG B 10 A_GunFlash;
 		BFGG B 10 A_FireBFG;
 		BFGG B 20 A_ReFire;
 		Goto Ready;
