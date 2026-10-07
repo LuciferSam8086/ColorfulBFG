@@ -11,7 +11,9 @@
 class PowerPentagramOfProtection : Powerup
 {
 
-    string oldArmorIcon;
+    // The real armor icon, stashed while the fake DOOMA0 icon is shown.
+    // TextureID (not String) so we can restore it verbatim without re-resolving.
+    TextureID oldArmorIcon;
 	Default
 	{
 		Powerup.Duration -30;			// negative value = seconds
@@ -34,7 +36,11 @@ class PowerPentagramOfProtection : Powerup
 
 		let armor = BasicArmor(Owner.FindInventory("BasicArmor"));
 		if (armor == null) return;
-        
+
+		// Stash the real armor icon, then show the fake DOOMA0 icon.
+		oldArmorIcon = armor.Icon;
+		armor.Icon = TexMan.CheckForTexture("DOOMA0", TexMan.TYPE_Any);
+
 		p.pentagramActive = true;
 		p.pentagramPool = armor.Amount;
 		armor.Amount = p.PENTAGRAM_ARMOR_DISPLAY;
@@ -61,6 +67,8 @@ class PowerPentagramOfProtection : Powerup
 		if (armor != null)
 		{
 			armor.Amount = max(0, p.pentagramPool);
+			// Restore the previous armor icon (if any).
+			armor.Icon = oldArmorIcon;
 		}
 		p.pentagramPool = 0;
 	}
