@@ -4,6 +4,7 @@ version "5.0.3"
 #include "ZScript/Handlers/FriendlyNoDropHanlder.zs"
 #include "ZScript/Weapons/ColorfulBFG.zs"
 #include "ZScript/UltraDoomPlayer.zs"
+#include "ZScript/Powerups/PentagramOfProtection.zs"
 
 
 // Enablers
